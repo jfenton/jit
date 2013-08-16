@@ -158,16 +158,48 @@ var MouseEventsManager = new Class({
         //if(this.pos) return this.pos;
         var canvas = that.viz.canvas,
             s = canvas.getSize(),
-            p = canvas.getPos(),
+            p = canvas.getPos()
             ox = canvas.translateOffsetX,
             oy = canvas.translateOffsetY,
             sx = canvas.scaleOffsetX,
             sy = canvas.scaleOffsetY,
+            r = canvas.rotationOffset,
             pos = $.event.getPos(e, win);
+
+				// Event co-ords to from-center coords
+        this.pos = {
+          x: pos.x - p.x - s.width/2,
+          y: pos.y - p.y - s.height/2
+        };
+
+				// Rotate the hit point based on the canvas translation
+        var center = { x:0, y:0 };
+				r = -r;
+        var rx = Math.cos(r) * (this.pos.x - center.x) - Math.sin(r) * (this.pos.y - center.y) + center.x;
+        var ry = Math.sin(r) * (this.pos.x - center.x) + Math.cos(r) * (this.pos.y - center.y) + center.y;
+        this.pos.x = rx;
+        this.pos.y = ry;
+
+				// Translate from-center coords based on canvas translation, and zoom factor
+        this.pos.x = (this.pos.x - ox) * 1/sx;
+        this.pos.y = (this.pos.y - oy) * 1/sy;
+
+				// Debug: Adds a yellow spot at the calculated hit point
+        var context = canvas.getCtx();
+        context.beginPath();
+        context.arc(this.pos.x, this.pos.y, 10, 0, 2 * Math.PI, false);
+        context.fillStyle = '#ffff00';
+        context.fill();
+        context.lineWidth = 5;
+        context.strokeStyle = '#ffff00';
+        context.stroke();
+
+/*
         this.pos = {
           x: (pos.x - p.x - s.width/2 - ox) * 1/sx,
           y: (pos.y - p.y - s.height/2 - oy) * 1/sy
         };
+*/
         return this.pos;
       },
       getNode: function() {

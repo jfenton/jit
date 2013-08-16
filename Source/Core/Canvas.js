@@ -81,6 +81,7 @@ var Canvas;
     translateOffsetY: 0,
     scaleOffsetX: 1,
     scaleOffsetY: 1,
+		rotationOffset: 0,
     
     initialize: function(viz, opt) {
       this.viz = viz;
@@ -295,6 +296,29 @@ var Canvas;
       this.translate(dx, dy, false);
     },
     /*
+      Method: rotate
+      
+      Applies a rotation to the canvas.
+      
+      Parameters:
+      
+      r - (number) rotation in radians.
+      disablePlot - (boolean) Default's *false*. Set this to *true* if you don't want to refresh the visualization.
+      
+      Example:
+      
+      (start code js)
+       canvas.rotate(45 * Math.PI/180, false);
+      (end code)
+    
+    */
+    rotate: function(r, disablePlot) {
+      this.rotationOffset += r;
+      for(var i=0, l=this.canvases.length; i<l; i++) {
+        this.canvases[i].rotate(r, disablePlot);
+      }
+    },
+    /*
       Method: getZoom
 
       Returns canvas zooming factors. *1* means initial zoom.
@@ -482,6 +506,10 @@ var Canvas;
       this.translateOffsetX += x*sx;
       this.translateOffsetY += y*sy;
       this.getCtx().translate(x, y);
+      !disablePlot && this.plot();
+    },
+    rotate: function(r, disablePlot) {
+      this.getCtx().rotate(r);
       !disablePlot && this.plot();
     },
     scale: function(x, y, disablePlot) {

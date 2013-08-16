@@ -361,7 +361,7 @@ function init(){
     //end
     
     //init RGraph
-    var rgraph = new $jit.RGraph({
+    rgraph = new $jit.RGraph({
         //Where to append the visualization
         injectInto: 'infovis',
         //Optional: create a background canvas that plots
