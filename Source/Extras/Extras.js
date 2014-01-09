@@ -158,7 +158,7 @@ var MouseEventsManager = new Class({
         //if(this.pos) return this.pos;
         var canvas = that.viz.canvas,
             s = canvas.getSize(),
-            p = canvas.getPos()
+            p = canvas.getPos(),
             ox = canvas.translateOffsetX,
             oy = canvas.translateOffsetY,
             sx = canvas.scaleOffsetX,
