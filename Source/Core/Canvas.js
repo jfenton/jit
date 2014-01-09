@@ -6,8 +6,8 @@
 /*
  Class: Canvas
  
- 	A canvas widget used by all visualizations. The canvas object can be accessed by doing *viz.canvas*. If you want to 
- 	know more about <Canvas> options take a look at <Options.Canvas>.
+  A canvas widget used by all visualizations. The canvas object can be accessed by doing *viz.canvas*. If you want to 
+  know more about <Canvas> options take a look at <Options.Canvas>.
  
  A canvas widget is a set of DOM elements that wrap the native canvas DOM Element providing a consistent API and behavior 
  across all browsers. It can also include Elements to add DOM (SVG or HTML) label support to all visualizations.
@@ -17,33 +17,33 @@
  Suppose we have this HTML
  
  (start code xml)
- 	<div id="infovis"></div>
+  <div id="infovis"></div>
  (end code)
  
  Now we create a new Visualization
  
  (start code js)
- 	var viz = new $jit.Viz({
- 		//Where to inject the canvas. Any div container will do.
- 		'injectInto':'infovis',
-		 //width and height for canvas. 
-		 //Default's to the container offsetWidth and Height.
-		 'width': 900,
-		 'height':500
-	 });
+  var viz = new $jit.Viz({
+    //Where to inject the canvas. Any div container will do.
+    'injectInto':'infovis',
+     //width and height for canvas. 
+     //Default's to the container offsetWidth and Height.
+     'width': 900,
+     'height':500
+   });
  (end code)
 
  The generated HTML will look like this
  
  (start code xml)
  <div id="infovis">
- 	<div id="infovis-canvaswidget" style="position:relative;">
- 	<canvas id="infovis-canvas" width=900 height=500
- 	style="position:absolute; top:0; left:0; width:900px; height:500px;" />
- 	<div id="infovis-label"
- 	style="overflow:visible; position:absolute; top:0; left:0; width:900px; height:0px">
- 	</div>
- 	</div>
+  <div id="infovis-canvaswidget" style="position:relative;">
+  <canvas id="infovis-canvas" width=900 height=500
+  style="position:absolute; top:0; left:0; width:900px; height:500px;" />
+  <div id="infovis-label"
+  style="overflow:visible; position:absolute; top:0; left:0; width:900px; height:0px">
+  </div>
+  </div>
  </div>
  (end code)
  
@@ -81,7 +81,7 @@ var Canvas;
     translateOffsetY: 0,
     scaleOffsetX: 1,
     scaleOffsetY: 1,
-		rotationOffset: 0,
+    rotationOffset: 0,
     
     initialize: function(viz, opt) {
       this.viz = viz;
@@ -231,6 +231,7 @@ var Canvas;
       this.getPos(true);
       this.translateOffsetX = this.translateOffsetY = 0;
       this.scaleOffsetX = this.scaleOffsetY = 1;
+      this.rotationOffset = 0;
       for(var i=0, l=this.canvases.length; i<l; i++) {
         this.canvases[i].resize(width, height);
       }
@@ -259,11 +260,14 @@ var Canvas;
     
     */
     translate: function(x, y, disablePlot) {
+      var rotationOffset = this.rotationOffset;
+      this.rotate(-rotationOffset, true);
       this.translateOffsetX += x*this.scaleOffsetX;
       this.translateOffsetY += y*this.scaleOffsetY;
       for(var i=0, l=this.canvases.length; i<l; i++) {
-        this.canvases[i].translate(x, y, disablePlot);
+        this.canvases[i].translate(x, y, true);
       }
+      this.rotate(rotationOffset, disablePlot);
     },
     /*
       Method: scale

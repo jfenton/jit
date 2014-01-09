@@ -166,25 +166,25 @@ var MouseEventsManager = new Class({
             r = canvas.rotationOffset,
             pos = $.event.getPos(e, win);
 
-				// Event co-ords to from-center coords
+        // Event co-ords to from-center coords
         this.pos = {
           x: pos.x - p.x - s.width/2,
           y: pos.y - p.y - s.height/2
         };
 
-				// Rotate the hit point based on the canvas translation
+        // Translate from-center coords based on canvas translation, and zoom factor
+        this.pos.x = (this.pos.x - ox) * 1/sx;
+        this.pos.y = (this.pos.y - oy) * 1/sy;
+
+        // Rotate the hit point based on the canvas translation
         var center = { x:0, y:0 };
-				r = -r;
+        r = -r;
         var rx = Math.cos(r) * (this.pos.x - center.x) - Math.sin(r) * (this.pos.y - center.y) + center.x;
         var ry = Math.sin(r) * (this.pos.x - center.x) + Math.cos(r) * (this.pos.y - center.y) + center.y;
         this.pos.x = rx;
         this.pos.y = ry;
 
-				// Translate from-center coords based on canvas translation, and zoom factor
-        this.pos.x = (this.pos.x - ox) * 1/sx;
-        this.pos.y = (this.pos.y - oy) * 1/sy;
-
-				// Debug: Adds a yellow spot at the calculated hit point
+        // Debug: Adds a yellow spot at the calculated hit point
         var context = canvas.getCtx();
         context.beginPath();
         context.arc(this.pos.x, this.pos.y, 10, 0, 2 * Math.PI, false);
